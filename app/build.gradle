@@ -1,9 +1,8 @@
 apply plugin: 'com.android.application'
-
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "com.robotleo.securityrobotrrotocol"
+//        applicationId "com.robotleo.securityrobotrrotocol"
         minSdkVersion 15
         targetSdkVersion 26
         versionCode 1
@@ -16,6 +15,18 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    lintOptions {
+        abortOnError false
+    }
+
+
+    sourceSets {
+        main {
+
+            //java.srcDirs = ['src/main/java', 'src/main/java/com/robotleo/hardware', 'src/main/java/com/robotleo/hardware/serial', 'src/main/java/com/robotleo/hardware/serial/connection', 'src/main/java/com/robotleo/secu']
+        }
+    }
 }
 
 dependencies {
@@ -26,3 +37,20 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 }
+
+task makeJar(type: Jar) {
+    from file('build/intermediates/classes/release')
+    //打出的jar包名称
+    archiveName = 'usbProtocolV1.0.1.1.jar'
+    destinationDir = file('build/libs')
+    //过滤不需要的class
+    exclude "**/**/BuildConfig.class"
+    exclude "**/**/BuildConfig\$*.class"
+    exclude "**/R.class"
+    exclude "**/R\$*.class"
+
+    //指定打包的class
+    include "com/robotleo/hardware/**/*.class"
+}
+makeJar.dependsOn(build)
+//打包命令：gradlew makeJar
