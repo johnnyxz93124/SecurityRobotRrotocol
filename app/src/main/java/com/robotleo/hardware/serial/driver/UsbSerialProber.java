@@ -3,6 +3,7 @@ package com.robotleo.hardware.serial.driver;
 import android.annotation.SuppressLint;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
+import android.util.Log;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -36,17 +37,17 @@ public class UsbSerialProber {
      * from the currently-attached {@link UsbDevice} hierarchy. This method does
      * not require permission from the Android USB system, since it does not
      * open any of the devices.
-     *�����������ӵ�usb�豸
      * @param usbManager
      * @return a list, possibly empty, of all compatible drivers
      */
     @SuppressLint("NewApi")
 	public List<UsbSerialDriver> findAllDrivers(final UsbManager usbManager) {
         final List<UsbSerialDriver> result = new ArrayList<UsbSerialDriver>();
-        
+
         for (final UsbDevice usbDevice : usbManager.getDeviceList().values()) {
             final UsbSerialDriver driver = probeDevice(usbDevice);
             if (driver != null) {
+                Log.i("UsbSerialProber", "usbDevice="+usbDevice.getInterfaceCount() );
                 result.add(driver);
             }
         }
@@ -64,17 +65,15 @@ public class UsbSerialProber {
 	public UsbSerialDriver probeDevice(final UsbDevice usbDevice) {
         final int vendorId = usbDevice.getVendorId();
         final int productId = usbDevice.getProductId();
-        //���id��ȡ��Ӧ������
         final Class<? extends UsbSerialDriver> driverClass =
                 mProbeTable.findDriver(vendorId, productId);
         
         if (driverClass != null) {
+//            Log.i("UsbSerialProber",""+driverClass.getName());
             final UsbSerialDriver driver;
             try {
-                //��������Ĺ��췽��
                 final Constructor<? extends UsbSerialDriver> ctor =
                         driverClass.getConstructor(UsbDevice.class);
-                //ʵ�����
                 driver = ctor.newInstance(usbDevice);
             } catch (NoSuchMethodException e) {
                 throw new RuntimeException(e);

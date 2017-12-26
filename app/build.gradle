@@ -2,12 +2,11 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 26
     defaultConfig {
-//        applicationId "com.robotleo.securityrobotrrotocol"
+        applicationId "com.robotleo.pad"
         minSdkVersion 15
-        targetSdkVersion 26
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -24,7 +23,6 @@ android {
     sourceSets {
         main {
 
-            //java.srcDirs = ['src/main/java', 'src/main/java/com/robotleo/hardware', 'src/main/java/com/robotleo/hardware/serial', 'src/main/java/com/robotleo/hardware/serial/connection', 'src/main/java/com/robotleo/secu']
         }
     }
 }
